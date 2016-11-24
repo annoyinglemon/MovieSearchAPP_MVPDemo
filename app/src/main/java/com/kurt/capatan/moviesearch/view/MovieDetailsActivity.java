@@ -26,8 +26,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
         Movie mMovie = (Movie) getIntent().getExtras().getSerializable("movie");
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.ctbMovieTitleYear);
-        collapsingToolbarLayout.setTitle("Movie Details");
-        collapsingToolbarLayout.setExpandedTitleColor(ContextCompat.getColor(this, android.R.color.transparent));
+        collapsingToolbarLayout.setTitle(mMovie.getTitle());
+        collapsingToolbarLayout.setExpandedTitleColor(ContextCompat.getColor(this, R.color.md_blue_grey_100));
 
 
 

@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
                 if(event.getAction() == MotionEvent.ACTION_UP) {
                     if(event.getRawX() >= (etSearch.getRight() - etSearch.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         // your action here
-                        mSearchedMovies.clear();
+                        mAdapter.clearSearch();
                         mAdapter.notifyDataSetChanged();
                         mPresenter.onInitialSearch(etSearch.getText().toString());
                         return true;
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    mSearchedMovies.clear();
+                    mAdapter.clearSearch();
                     mAdapter.notifyDataSetChanged();
                     mPresenter.onInitialSearch(etSearch.getText().toString());
                     return true;
@@ -250,24 +250,33 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
 
         @Override
         public void onBindViewHolder(MyViewHolder holder, final int position) {
-            final Movie movie = mSearchedMovies.get(position);
-            if(movie.getPoster()!=null){
-                holder.ivThumbImage.setImageBitmap(BitmapFactory.decodeByteArray(movie.getPoster(), 0, movie.getPoster().length));
-            }
-            holder.tvTitle.setText(movie.getTitle());
-            holder.tvDirector.setText(movie.getDirector());
-            holder.tvYear.setText(Integer.toString(movie.getYear()));
-            holder.cvMovieItem.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showMovieDetails(movie);
+            if(position > 0) {
+                final Movie movie = mSearchedMovies.get(position - 1);
+                if (movie.getPoster() != null) {
+                    holder.ivThumbImage.setImageBitmap(BitmapFactory.decodeByteArray(movie.getPoster(), 0, movie.getPoster().length));
                 }
-            });
+                holder.tvTitle.setText(movie.getTitle());
+                holder.tvDirector.setText(movie.getDirector());
+                holder.tvYear.setText(Integer.toString(movie.getYear()));
+                holder.cvMovieItem.setVisibility(View.VISIBLE);
+                holder.cvMovieItem.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showMovieDetails(movie);
+                    }
+                });
+            } else {
+                holder.cvMovieItem.setVisibility(View.GONE);
+            }
         }
 
         @Override
         public int getItemCount() {
-            return mSearchedMovies.size();
+            return mSearchedMovies.size()+1;
+        }
+
+        public void clearSearch(){
+            mSearchedMovies.clear();
         }
     }
 
