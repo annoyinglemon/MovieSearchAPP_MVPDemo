@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="95dp"
+        android:layout_height="165dp"
         android:background="@android:color/transparent"
         android:orientation="vertical"
         android:gravity="center">
@@ -20,7 +20,7 @@
     <android.support.v7.widget.CardView
         android:id="@+id/cvMovieItem"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="200dp"
         android:background="?selectableItemBackground"
         app:cardCornerRadius="3dp"
         app:cardElevation="4dp"
@@ -34,7 +34,7 @@
 
             <ImageView
                 android:id="@+id/ivThumbImage"
-                android:layout_width="80dp"
+                android:layout_width="130dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="8dp"
                 android:src="@drawable/ic_movie" />
@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@+id/ivThumbImage"
                 android:text="Deadpool"
-                android:textSize="19sp"
+                android:textSize="23sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -54,7 +54,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvTitle"
                 android:layout_toEndOf="@+id/ivThumbImage"
-                android:text="Tim Miller" />
+                android:text="Tim Miller"
+                android:textSize="17sp"/>
 
             <TextView
                 android:id="@+id/tvYear"
@@ -63,7 +64,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_toEndOf="@+id/ivThumbImage"
                 android:text="2016"
-                android:textSize="17sp" />
+                android:textSize="20sp" />
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>

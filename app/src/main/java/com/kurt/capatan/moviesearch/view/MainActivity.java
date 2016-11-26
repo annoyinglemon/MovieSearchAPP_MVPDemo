@@ -11,13 +11,17 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -103,9 +107,24 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
         mSearchedMovies = new ArrayList<>();
         mAdapter = new MovieRecyclerAdapter();
 
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        rvMovies.setLayoutManager(linearLayoutManager);
+        if(isDeviceTablet()){
+            GridLayoutManager manager = new GridLayoutManager(this, 2);
+            manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    if(position==0){
+                        return 2;
+                    }else
+                        return 1;
+                }
+            });
+            rvMovies.setLayoutManager(manager);
+        }else {
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            rvMovies.setLayoutManager(linearLayoutManager);
+        }
+
         rvMovies.setItemAnimator(new DefaultItemAnimator());
         rvMovies.setAdapter(mAdapter);
         rvMovies.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -236,7 +255,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-
     }
 
     @Override
@@ -249,6 +267,15 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
     protected void onDestroy() {
         mPresenter.onDestroy();
         super.onDestroy();
+    }
+
+    boolean isDeviceTablet(){
+        WindowManager wManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        Display display = wManager.getDefaultDisplay();
+        DisplayMetrics dMetrics = new DisplayMetrics();
+        display.getMetrics(dMetrics);
+        int width = dMetrics.widthPixels;
+        return width >= 600;
     }
 
 
