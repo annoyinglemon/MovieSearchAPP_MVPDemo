@@ -28,13 +28,17 @@ public interface MovieRepositoryContract {
         void onSearchCompleted(ArrayList<Movie> movies);
     }
 
+    interface OnNextPageCompletedListener{
+        void onNextPageCompleted(ArrayList<Movie> movies);
+    }
+
     interface OnPosterDownloadCompletedListener{
         void onDownloadCompleted(Movie movie);
     }
 
     void newMovieSearch(String searchQuery, OnSearchCompletedListener onSearchCompletedListener);
 
-    void nextPageSearch(String searchQuery, int pageNumber, OnSearchCompletedListener onSearchCompletedListener);
+    void nextPageSearch(String searchQuery, int pageNumber, OnNextPageCompletedListener onNextPageCompleted);
 
     void downloadPoster(Movie movie, OnPosterDownloadCompletedListener onPosterDownloadCompletedListener);
 

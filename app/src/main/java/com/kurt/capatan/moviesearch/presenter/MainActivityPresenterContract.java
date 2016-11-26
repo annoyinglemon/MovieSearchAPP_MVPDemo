@@ -26,7 +26,7 @@ public interface MainActivityPresenterContract {
 
     void onInitialSearch(String searchQuery);
 
-    void onNextPageSearch();
+    void onNextPageSearch(int numberSearchMovies, boolean isSearching);
 
     void downloadPoster(Movie movie);
 

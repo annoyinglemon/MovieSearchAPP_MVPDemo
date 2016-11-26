@@ -27,9 +27,8 @@ import com.kurt.capatan.moviesearch.view.MainActivityViewContract;
 import java.util.ArrayList;
 
 
-public class MainActivityPresenter implements MainActivityPresenterContract ,MovieRepositoryContract.OnSearchCompletedListener, MovieRepositoryContract.OnPosterDownloadCompletedListener {
+public class MainActivityPresenter implements MainActivityPresenterContract ,MovieRepositoryContract.OnSearchCompletedListener, MovieRepositoryContract.OnPosterDownloadCompletedListener, MovieRepositoryContract.OnNextPageCompletedListener {
 
-    private ArrayList<Movie> mMovies;
     private String mSearchQuery;
     private int mPageNumber = 0;
 
@@ -39,7 +38,6 @@ public class MainActivityPresenter implements MainActivityPresenterContract ,Mov
     public MainActivityPresenter(MainActivityViewContract mainActivityViewContract, MovieRepositoryContract movieRepositoryContract) {
         this.mainActivityViewContract = mainActivityViewContract;
         this.movieRepositoryContract = movieRepositoryContract;
-        mMovies = new ArrayList<>();
     }
 
     @Override
@@ -49,28 +47,49 @@ public class MainActivityPresenter implements MainActivityPresenterContract ,Mov
         mainActivityViewContract.hideMovieRecyclerView();
         mainActivityViewContract.hideNoMoviesFound();
         mainActivityViewContract.hideTextGuide();
+        mainActivityViewContract.hideProgressItemBottom();
         movieRepositoryContract.newMovieSearch(mSearchQuery, this);
         mPageNumber = 1;
     }
 
     @Override
-    public void onNextPageSearch() {
+    public void onNextPageSearch(int numberSearchMovies, boolean isSearching) {
         mPageNumber = mPageNumber + 1;
-        movieRepositoryContract.nextPageSearch(mSearchQuery, mPageNumber, this);
+        if((numberSearchMovies%10)==0&&!isSearching) {
+            movieRepositoryContract.nextPageSearch(mSearchQuery, mPageNumber, this);
+            mainActivityViewContract.showProgressItemBottom();
+        }else {
+            mainActivityViewContract.hideProgressItemBottom();
+        }
+
+        //todo next page search
     }
 
     @Override
     public void onSearchCompleted(ArrayList<Movie> movies) {
+        mainActivityViewContract.hideProgress();
+        mainActivityViewContract.hideProgressItemBottom();
         if(movies!=null){
             mainActivityViewContract.addMovieItems(movies);
-            mainActivityViewContract.hideProgress();
             mainActivityViewContract.showMovieRecyclerView();
             for(Movie movie: movies){
                 downloadPoster(movie);
             }
         }else {
-            mainActivityViewContract.hideProgress();
             mainActivityViewContract.showNoMoviesFound();
+        }
+    }
+
+    @Override
+    public void onNextPageCompleted(ArrayList<Movie> movies) {
+        mainActivityViewContract.hideProgressItemBottom();
+        if(movies!=null){
+            mainActivityViewContract.addMovieItems(movies);
+            for(Movie movie: movies){
+                downloadPoster(movie);
+            }
+        }else{
+            mainActivityViewContract.showToastMessage("No movies to follow");
         }
     }
 

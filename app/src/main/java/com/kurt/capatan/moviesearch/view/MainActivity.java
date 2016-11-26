@@ -1,6 +1,5 @@
 package com.kurt.capatan.moviesearch.view;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -10,19 +9,18 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kurt.capatan.moviesearch.R;
 import com.kurt.capatan.moviesearch.data.Movie;
@@ -31,7 +29,7 @@ import com.kurt.capatan.moviesearch.presenter.MainActivityPresenter;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements MainActivityViewContract{
+public class MainActivity extends AppCompatActivity implements MainActivityViewContract {
 
     private EditText etSearch;
     private TextView tvGuide;
@@ -71,8 +69,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
                 final int DRAWABLE_RIGHT = 2;
                 final int DRAWABLE_BOTTOM = 3;
 
-                if(event.getAction() == MotionEvent.ACTION_UP) {
-                    if(event.getRawX() >= (etSearch.getRight() - etSearch.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (event.getRawX() >= (etSearch.getRight() - etSearch.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         // your action here
                         mAdapter.clearSearch();
                         mAdapter.notifyDataSetChanged();
@@ -109,8 +107,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) { //check for scroll down
-                    if(!rvMovies.canScrollVertically(1)&&(mSearchedMovies.size()%10)==0){
-                        mPresenter.onNextPageSearch();
+                    if (!rvMovies.canScrollVertically(1)) {
+                        mPresenter.onNextPageSearch(mSearchedMovies.size(), mAdapter.isSearchingNextPage());
                     }
                 }
             }
@@ -119,48 +117,64 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
 
     @Override
     public void hideTextGuide() {
-        if(tvGuide.getVisibility()==View.VISIBLE)
+        if (tvGuide.getVisibility() == View.VISIBLE)
             tvGuide.setVisibility(View.GONE);
     }
 
     @Override
     public void showNoMoviesFound() {
-        if(llNoMoviesFound.getVisibility()==View.GONE)
+        if (llNoMoviesFound.getVisibility() == View.GONE)
             llNoMoviesFound.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideNoMoviesFound() {
-        if(llNoMoviesFound.getVisibility()==View.VISIBLE)
+        if (llNoMoviesFound.getVisibility() == View.VISIBLE)
             llNoMoviesFound.setVisibility(View.GONE);
     }
 
     @Override
-    public void showSnackBarNoInternet(){
+    public void showSnackBarNoInternet() {
         Snackbar.make(findViewById(R.id.activity_main), "No internet connection", Snackbar.LENGTH_SHORT);
     }
 
     @Override
     public void showProgress() {
-        if(pbSearching.getVisibility()==View.GONE)
+        if (pbSearching.getVisibility() == View.GONE)
             pbSearching.setVisibility(View.VISIBLE);
     }
 
     @Override
+    public void showProgressItemBottom() {
+        if(!mAdapter.isSearchingNextPage()) {
+            mAdapter.setIsSearchingNextPage(true);
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
     public void hideProgress() {
-        if(pbSearching.getVisibility()==View.VISIBLE)
+        if (pbSearching.getVisibility() == View.VISIBLE)
             pbSearching.setVisibility(View.GONE);
     }
 
     @Override
+    public void hideProgressItemBottom() {
+        if(mAdapter.isSearchingNextPage()) {
+            mAdapter.setIsSearchingNextPage(false);
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
     public void showMovieRecyclerView() {
-        if(rvMovies.getVisibility()==View.GONE)
+        if (rvMovies.getVisibility() == View.GONE)
             rvMovies.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideMovieRecyclerView() {
-        if(rvMovies.getVisibility()==View.VISIBLE)
+        if (rvMovies.getVisibility() == View.VISIBLE)
             rvMovies.setVisibility(View.GONE);
     }
 
@@ -171,29 +185,19 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
     }
 
     @Override
-    public void addPosterToMovieItem(Movie movie){
-        for(int i = 0; i < mSearchedMovies.size(); i++){
-            if(mSearchedMovies.get(i).getImdbId().equals(movie.getImdbId())){
-                mSearchedMovies.set(i,movie);
-                mAdapter.notifyItemChanged(i);
+    public void addPosterToMovieItem(Movie movie) {
+        for (int i = 0; i < mSearchedMovies.size(); i++) {
+            if (mSearchedMovies.get(i).getImdbId().equals(movie.getImdbId())) {
+                mSearchedMovies.set(i, movie);
+                mAdapter.notifyDataSetChanged();
             }
         }
     }
 
-//    private void mockSearch(){
-//        View view = this.getCurrentFocus();
-//        if (view != null) {
-//            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-//            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-//        }
-//        Movie deadpool = new Movie("125152", "Captain America: Civil War", 2016, "R", "12 May 2016", "148 min", "Action",
-//                "Russo Brothers", "Rhett Reese, Paul Wernick", "Ryan Reynolds, Karan Soni, Ed Skrein, Michael Benyaer", "This is the origin story of former Special Forces operative turned mercenary Wade Wilson, who after being subjected to a rogue experiment that leaves him with accelerated healing powers, adopts the alter ego Deadpool." +
-//                " Armed with his new abilities and a dark, twisted sense of humor, Deadpool hunts down the man who nearly destroyed his life.", "English", "USA", "7 awards and 11 nominations", 65, 8.1 ,"https://images-na.ssl-images-amazon.com/images/M/MV5BMjQyODg5Njc4N15BMl5BanBnXkFtZTgwMzExMjE3NzE@._V1_SX300.jpg");
-//        mSearchedMovies.add(deadpool);
-//        mAdapter.notifyDataSetChanged();
-//        tvGuide.setVisibility(View.GONE);
-//        rvMovies.setVisibility(View.VISIBLE);
-//    }
+    @Override
+    public void showToastMessage(String message){
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     protected void onResume() {
@@ -222,24 +226,28 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
 
     public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdapter.MyViewHolder> {
 
-        public class MyViewHolder extends RecyclerView.ViewHolder {
 
-            public CardView cvMovieItem;
-            public ImageView ivThumbImage;
-            public TextView tvTitle, tvDirector, tvYear;
+        private boolean isSearchingNextPage = false;
+        private int itemsAdded = 1;
 
-            public MyViewHolder(View view) {
+        class MyViewHolder extends RecyclerView.ViewHolder {
+
+            CardView cvMovieItem;
+            ImageView ivThumbImage;
+            TextView tvTitle, tvDirector, tvYear;
+            ProgressBar pbSearchingBottom;
+
+
+
+            MyViewHolder(View view) {
                 super(view);
                 cvMovieItem = (CardView) view.findViewById(R.id.cvMovieItem);
                 ivThumbImage = (ImageView) view.findViewById(R.id.ivThumbImage);
                 tvTitle = (TextView) view.findViewById(R.id.tvTitle);
                 tvDirector = (TextView) view.findViewById(R.id.tvDirector);
                 tvYear = (TextView) view.findViewById(R.id.tvYear);
+                pbSearchingBottom = (ProgressBar) view.findViewById(R.id.pbSearchingBottom);
             }
-        }
-
-
-        public MovieRecyclerAdapter() {
         }
 
         @Override
@@ -250,33 +258,68 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
 
         @Override
         public void onBindViewHolder(MyViewHolder holder, final int position) {
-            if(position > 0) {
-                final Movie movie = mSearchedMovies.get(position - 1);
-                if (movie.getPoster() != null) {
-                    holder.ivThumbImage.setImageBitmap(BitmapFactory.decodeByteArray(movie.getPoster(), 0, movie.getPoster().length));
+            if(position==0){
+                holder.cvMovieItem.setVisibility(View.GONE);
+            }else if(position==(getItemCount()-1)){
+                if(this.isSearchingNextPage){
+                    holder.cvMovieItem.setVisibility(View.GONE);
+                    holder.pbSearchingBottom.setVisibility(View.VISIBLE);
+                }else{
+                    final Movie movie = mSearchedMovies.get(position - 1);
+                    if (movie.getPoster() != null) {
+                        holder.ivThumbImage.setImageBitmap(BitmapFactory.decodeByteArray(movie.getPoster(), 0, movie.getPoster().length));
+                    }
+                    holder.tvTitle.setText(movie.getTitle());
+                    holder.tvDirector.setText(movie.getDirector());
+                    holder.tvYear.setText(Integer.toString(movie.getYear()));
+                    holder.cvMovieItem.setVisibility(View.VISIBLE);
+                    holder.cvMovieItem.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            showMovieDetails(movie);
+                        }
+                    });
+                    holder.pbSearchingBottom.setVisibility(View.GONE);
                 }
-                holder.tvTitle.setText(movie.getTitle());
-                holder.tvDirector.setText(movie.getDirector());
-                holder.tvYear.setText(Integer.toString(movie.getYear()));
+            }else{
+                final Movie movie2 = mSearchedMovies.get(position - 1);
+                if (movie2.getPoster() != null) {
+                    holder.ivThumbImage.setImageBitmap(BitmapFactory.decodeByteArray(movie2.getPoster(), 0, movie2.getPoster().length));
+                }
+                holder.tvTitle.setText(movie2.getTitle());
+                holder.tvDirector.setText(movie2.getDirector());
+                holder.tvYear.setText(Integer.toString(movie2.getYear()));
                 holder.cvMovieItem.setVisibility(View.VISIBLE);
                 holder.cvMovieItem.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showMovieDetails(movie);
+                        showMovieDetails(movie2);
                     }
                 });
-            } else {
-                holder.cvMovieItem.setVisibility(View.GONE);
+                holder.pbSearchingBottom.setVisibility(View.GONE);
             }
         }
 
         @Override
         public int getItemCount() {
-            return mSearchedMovies.size()+1;
+            return mSearchedMovies.size() + this.itemsAdded;
         }
 
-        public void clearSearch(){
+        public void clearSearch() {
             mSearchedMovies.clear();
+        }
+
+        public void setIsSearchingNextPage(boolean isSearchingNextPage){
+            this.isSearchingNextPage = isSearchingNextPage;
+            if(this.isSearchingNextPage){
+                this.itemsAdded = 2;
+            }else {
+                this.itemsAdded = 1;
+            }
+        }
+
+        public boolean isSearchingNextPage(){
+            return  this.isSearchingNextPage;
         }
     }
 

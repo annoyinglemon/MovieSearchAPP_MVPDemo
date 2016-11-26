@@ -49,10 +49,10 @@ public class MovieRepository implements MovieRepositoryContract {
     }
 
     @Override
-    public void nextPageSearch(String searchQuery, int pageNumber, OnSearchCompletedListener onSearchCompletedListener) {
+    public void nextPageSearch(String searchQuery, int pageNumber, OnNextPageCompletedListener onNextPageCompletedListener) {
         String urlEnabled = searchQuery.replaceAll("\\s", "+");
         searchURL = "http://www.omdbapi.com/?s=" + urlEnabled + "&type=movie&page=" + pageNumber;
-        new SearchMovies(onSearchCompletedListener).execute(searchURL);
+        new SearchMovies(onNextPageCompletedListener).execute(searchURL);
     }
 
     @Override
@@ -63,9 +63,16 @@ public class MovieRepository implements MovieRepositoryContract {
     private class SearchMovies extends AsyncTask<String, Void, ArrayList<Movie>> {
 
         OnSearchCompletedListener onSearchCompletedListener;
+        OnNextPageCompletedListener onNextPageCompletedListener;
 
         SearchMovies(OnSearchCompletedListener onSearchCompletedListener) {
             this.onSearchCompletedListener = onSearchCompletedListener;
+            this.onNextPageCompletedListener = null;
+        }
+
+        SearchMovies(OnNextPageCompletedListener onNextPageCompletedListener) {
+            this.onSearchCompletedListener = null;
+            this.onNextPageCompletedListener = onNextPageCompletedListener;
         }
 
         @Override
@@ -116,7 +123,11 @@ public class MovieRepository implements MovieRepositoryContract {
         @Override
         protected void onPostExecute(ArrayList<Movie> movies) {
             super.onPostExecute(movies);
-            onSearchCompletedListener.onSearchCompleted(movies);
+            if(onSearchCompletedListener!=null)
+                onSearchCompletedListener.onSearchCompleted(movies);
+            else {
+                onNextPageCompletedListener.onNextPageCompleted(movies);
+            }
         }
     }
 

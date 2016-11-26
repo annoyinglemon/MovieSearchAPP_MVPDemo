@@ -17,7 +17,7 @@
         android:layout_marginEnd="18dp"
         app:cardCornerRadius="4dp"
         app:cardPreventCornerOverlap="true"
-        app:cardElevation="5dp"
+        app:cardElevation="7dp"
         app:cardUseCompatPadding="true"
         app:cardBackgroundColor="@color/md_white_1000"
         android:id="@+id/cvSearch"
@@ -83,6 +83,5 @@
         android:id="@+id/rvMovies"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
 
 </RelativeLayout>

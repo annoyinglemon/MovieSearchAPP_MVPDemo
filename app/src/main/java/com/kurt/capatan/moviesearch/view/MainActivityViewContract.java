@@ -35,7 +35,11 @@ public interface MainActivityViewContract {
 
     void showProgress();
 
+    void showProgressItemBottom();
+
     void hideProgress();
+
+    void hideProgressItemBottom();
 
     void showMovieRecyclerView();
 
@@ -46,4 +50,6 @@ public interface MainActivityViewContract {
     void addPosterToMovieItem(Movie movie);
 
     void showMovieDetails(Movie movie);
+
+    void showToastMessage(String message);
 }
