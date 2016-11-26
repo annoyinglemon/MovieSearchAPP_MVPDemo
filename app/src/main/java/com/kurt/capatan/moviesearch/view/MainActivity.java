@@ -14,14 +14,11 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -81,8 +78,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (etSearch.getRight() - etSearch.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         // your action here
-                        mAdapter.clearSearch();
-                        mAdapter.notifyDataSetChanged();
+                        if(isNetworkAvailable()) {
+                            mAdapter.clearSearch();
+                            mAdapter.notifyDataSetChanged();
+                        }
                         mPresenter.onInitialSearch(etSearch.getText().toString(), isNetworkAvailable());
                         return true;
                     }
@@ -95,8 +94,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    mAdapter.clearSearch();
-                    mAdapter.notifyDataSetChanged();
+                    if(isNetworkAvailable()) {
+                        mAdapter.clearSearch();
+                        mAdapter.notifyDataSetChanged();
+                    }
                     mPresenter.onInitialSearch(etSearch.getText().toString(), isNetworkAvailable());
                     return true;
                 }
@@ -107,19 +108,19 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
         mSearchedMovies = new ArrayList<>();
         mAdapter = new MovieRecyclerAdapter();
 
-        if(isDeviceTablet()){
+        if (isDeviceTablet()) {
             GridLayoutManager manager = new GridLayoutManager(this, 2);
             manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
-                    if(position==0){
+                    if (position == 0) {
                         return 2;
-                    }else
+                    } else
                         return 1;
                 }
             });
             rvMovies.setLayoutManager(manager);
-        }else {
+        } else {
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             rvMovies.setLayoutManager(linearLayoutManager);
@@ -165,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
 
     @Override
     public void showProgressItemBottom() {
-        if(!mAdapter.isSearchingNextPage()) {
+        if (!mAdapter.isSearchingNextPage()) {
             mAdapter.setIsSearchingNextPage(true);
             mAdapter.notifyDataSetChanged();
         }
@@ -179,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
 
     @Override
     public void hideProgressItemBottom() {
-        if(mAdapter.isSearchingNextPage()) {
+        if (mAdapter.isSearchingNextPage()) {
             mAdapter.setIsSearchingNextPage(false);
             mAdapter.notifyDataSetChanged();
         }
@@ -214,17 +215,17 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
     }
 
     @Override
-    public void showToastMessage(String message){
+    public void showToastMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void recyclerViewScrollToTop(){
+    public void recyclerViewScrollToTop() {
         rvMovies.scrollToPosition(0);
     }
 
     @Override
-    public void showNoNetworkSnackbar(){
+    public void showNoNetworkSnackbar() {
         Snackbar.make(findViewById(R.id.activity_main), "No internet connection", Snackbar.LENGTH_LONG).show();
     }
 
@@ -269,13 +270,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
         super.onDestroy();
     }
 
-    boolean isDeviceTablet(){
-        WindowManager wManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-        Display display = wManager.getDefaultDisplay();
-        DisplayMetrics dMetrics = new DisplayMetrics();
-        display.getMetrics(dMetrics);
-        int width = dMetrics.widthPixels;
-        return width >= 600;
+    boolean isDeviceTablet() {
+        return (getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
 
@@ -291,7 +287,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
             ImageView ivThumbImage;
             TextView tvTitle, tvDirector, tvYear;
             ProgressBar pbSearchingBottom;
-
 
 
             MyViewHolder(View view) {
@@ -313,13 +308,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
 
         @Override
         public void onBindViewHolder(MyViewHolder holder, final int position) {
-            if(position==0){
+            if (position == 0) {
                 holder.cvMovieItem.setVisibility(View.GONE);
-            }else if(position==(getItemCount()-1)){
-                if(this.isSearchingNextPage){
+            } else if (position == (getItemCount() - 1)) {
+                if (this.isSearchingNextPage) {
                     holder.cvMovieItem.setVisibility(View.GONE);
                     holder.pbSearchingBottom.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     final Movie movie = mSearchedMovies.get(position - 1);
                     if (movie.getPoster() != null) {
                         holder.ivThumbImage.setImageBitmap(BitmapFactory.decodeByteArray(movie.getPoster(), 0, movie.getPoster().length));
@@ -336,7 +331,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
                     });
                     holder.pbSearchingBottom.setVisibility(View.GONE);
                 }
-            }else{
+            } else {
                 final Movie movie2 = mSearchedMovies.get(position - 1);
                 if (movie2.getPoster() != null) {
                     holder.ivThumbImage.setImageBitmap(BitmapFactory.decodeByteArray(movie2.getPoster(), 0, movie2.getPoster().length));
@@ -366,23 +361,23 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
             mSearchedMovies.clear();
         }
 
-        public void setIsSearchingNextPage(boolean isSearchingNextPage){
+        public void setIsSearchingNextPage(boolean isSearchingNextPage) {
             this.isSearchingNextPage = isSearchingNextPage;
-            if(this.isSearchingNextPage){
+            if (this.isSearchingNextPage) {
                 this.itemsAdded = 2;
-            }else {
+            } else {
                 this.itemsAdded = 1;
             }
         }
 
-        public boolean isSearchingNextPage(){
-            return  this.isSearchingNextPage;
+        public boolean isSearchingNextPage() {
+            return this.isSearchingNextPage;
         }
     }
 
     private boolean isNetworkAvailable() {
         final ConnectivityManager connectivityManager = ((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE));
-        if(connectivityManager.getActiveNetworkInfo()!=null && connectivityManager.getActiveNetworkInfo().isConnected())
+        if (connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected())
             return true;
         else
             return false;

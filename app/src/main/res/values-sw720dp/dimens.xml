@@ -1,0 +1,9 @@
+<resources>
+
+    <dimen name="edittext_marginTop">30dp</dimen>
+    <dimen name="edittext_marginEnd">50dp</dimen>
+    <dimen name="edittext_marginStart">50dp</dimen>
+    <dimen name="poster_height">400dp</dimen>
+    <dimen name="details_padding">60dp</dimen>
+
+</resources>
