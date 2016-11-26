@@ -24,9 +24,9 @@ import com.kurt.capatan.moviesearch.data.Movie;
 
 public interface MainActivityPresenterContract {
 
-    void onInitialSearch(String searchQuery);
+    void onInitialSearch(String searchQuery, boolean isNetworkConnected);
 
-    void onNextPageSearch(int numberSearchMovies, boolean isSearching);
+    void onNextPageSearch(int numberSearchMovies, boolean isSearching, boolean isNetworkConnected);
 
     void downloadPoster(Movie movie);
 

@@ -29,7 +29,7 @@ import java.util.ArrayList;
 
 public class MainActivityPresenter implements MainActivityPresenterContract ,MovieRepositoryContract.OnSearchCompletedListener, MovieRepositoryContract.OnPosterDownloadCompletedListener, MovieRepositoryContract.OnNextPageCompletedListener {
 
-    private String mSearchQuery;
+    private String mSearchQuery = "";
     private int mPageNumber = 0;
 
     private MainActivityViewContract mainActivityViewContract;
@@ -41,41 +41,49 @@ public class MainActivityPresenter implements MainActivityPresenterContract ,Mov
     }
 
     @Override
-    public void onInitialSearch(String searchQuery) {
-        mSearchQuery = searchQuery;
-        mainActivityViewContract.showProgress();
-        mainActivityViewContract.hideMovieRecyclerView();
-        mainActivityViewContract.hideNoMoviesFound();
-        mainActivityViewContract.hideTextGuide();
-        mainActivityViewContract.hideProgressItemBottom();
-        movieRepositoryContract.newMovieSearch(mSearchQuery, this);
-        mPageNumber = 1;
+    public void onInitialSearch(String searchQuery, boolean isNetworkConnected) {
+            if (isNetworkConnected) {
+                mSearchQuery = searchQuery;
+                mainActivityViewContract.showProgress();
+                mainActivityViewContract.hideMovieRecyclerView();
+                mainActivityViewContract.hideNoMoviesFound();
+                mainActivityViewContract.hideTextGuide();
+                mainActivityViewContract.hideProgressItemBottom();
+                mainActivityViewContract.hideSoftKeyboard();
+                mainActivityViewContract.recyclerViewScrollToTop();
+                movieRepositoryContract.newMovieSearch(mSearchQuery, this);
+                mPageNumber = 1;
+            } else {
+                mainActivityViewContract.showNoNetworkSnackbar();
+            }
     }
 
     @Override
-    public void onNextPageSearch(int numberSearchMovies, boolean isSearching) {
-        mPageNumber = mPageNumber + 1;
-        if((numberSearchMovies%10)==0&&!isSearching) {
-            movieRepositoryContract.nextPageSearch(mSearchQuery, mPageNumber, this);
-            mainActivityViewContract.showProgressItemBottom();
+    public void onNextPageSearch(int numberSearchMovies, boolean isSearching, boolean isNetworkConnected) {
+        if(isNetworkConnected) {
+            mPageNumber = mPageNumber + 1;
+            if ((numberSearchMovies % 10) == 0 && !isSearching) {
+                movieRepositoryContract.nextPageSearch(mSearchQuery, mPageNumber, this);
+                mainActivityViewContract.showProgressItemBottom();
+            } else {
+                mainActivityViewContract.hideProgressItemBottom();
+            }
         }else {
-            mainActivityViewContract.hideProgressItemBottom();
+            mainActivityViewContract.showNoNetworkSnackbar();
         }
-
-        //todo next page search
     }
 
     @Override
     public void onSearchCompleted(ArrayList<Movie> movies) {
         mainActivityViewContract.hideProgress();
         mainActivityViewContract.hideProgressItemBottom();
-        if(movies!=null){
+        if(movies!=null&&movies.size()>0){
             mainActivityViewContract.addMovieItems(movies);
             mainActivityViewContract.showMovieRecyclerView();
             for(Movie movie: movies){
                 downloadPoster(movie);
             }
-        }else {
+        } else {
             mainActivityViewContract.showNoMoviesFound();
         }
     }
@@ -83,7 +91,7 @@ public class MainActivityPresenter implements MainActivityPresenterContract ,Mov
     @Override
     public void onNextPageCompleted(ArrayList<Movie> movies) {
         mainActivityViewContract.hideProgressItemBottom();
-        if(movies!=null){
+        if(movies!=null&&movies.size()>0){
             mainActivityViewContract.addMovieItems(movies);
             for(Movie movie: movies){
                 downloadPoster(movie);

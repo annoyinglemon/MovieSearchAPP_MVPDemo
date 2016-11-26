@@ -31,8 +31,6 @@ public interface MainActivityViewContract {
 
     void hideNoMoviesFound();
 
-    void showSnackBarNoInternet();
-
     void showProgress();
 
     void showProgressItemBottom();
@@ -52,4 +50,10 @@ public interface MainActivityViewContract {
     void showMovieDetails(Movie movie);
 
     void showToastMessage(String message);
+
+    void hideSoftKeyboard();
+
+    void recyclerViewScrollToTop();
+
+    void showNoNetworkSnackbar();
 }

@@ -1,8 +1,12 @@
 package com.kurt.capatan.moviesearch.view;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -15,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -74,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
                         // your action here
                         mAdapter.clearSearch();
                         mAdapter.notifyDataSetChanged();
-                        mPresenter.onInitialSearch(etSearch.getText().toString());
+                        mPresenter.onInitialSearch(etSearch.getText().toString(), isNetworkAvailable());
                         return true;
                     }
                 }
@@ -88,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     mAdapter.clearSearch();
                     mAdapter.notifyDataSetChanged();
-                    mPresenter.onInitialSearch(etSearch.getText().toString());
+                    mPresenter.onInitialSearch(etSearch.getText().toString(), isNetworkAvailable());
                     return true;
                 }
                 return false;
@@ -108,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) { //check for scroll down
                     if (!rvMovies.canScrollVertically(1)) {
-                        mPresenter.onNextPageSearch(mSearchedMovies.size(), mAdapter.isSearchingNextPage());
+                        mPresenter.onNextPageSearch(mSearchedMovies.size(), mAdapter.isSearchingNextPage(), isNetworkAvailable());
                     }
                 }
             }
@@ -131,11 +136,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
     public void hideNoMoviesFound() {
         if (llNoMoviesFound.getVisibility() == View.VISIBLE)
             llNoMoviesFound.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showSnackBarNoInternet() {
-        Snackbar.make(findViewById(R.id.activity_main), "No internet connection", Snackbar.LENGTH_SHORT);
     }
 
     @Override
@@ -200,15 +200,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
     }
 
     @Override
-    protected void onResume() {
-        mPresenter.onResume();
-        super.onResume();
+    public void recyclerViewScrollToTop(){
+        rvMovies.scrollToPosition(0);
     }
 
     @Override
-    protected void onDestroy() {
-        mPresenter.onDestroy();
-        super.onDestroy();
+    public void showNoNetworkSnackbar(){
+        Snackbar.make(findViewById(R.id.activity_main), "No internet connection", Snackbar.LENGTH_LONG).show();
     }
 
     @Override
@@ -223,6 +221,36 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
         movieDetailIntent.putExtra("movie", movie);
         startActivity(movieDetailIntent);
     }
+
+    @Override
+    public void hideSoftKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+    }
+
+    @Override
+    protected void onResume() {
+        mPresenter.onResume();
+        super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mPresenter.onDestroy();
+        super.onDestroy();
+    }
+
 
     public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdapter.MyViewHolder> {
 
@@ -285,6 +313,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
                 final Movie movie2 = mSearchedMovies.get(position - 1);
                 if (movie2.getPoster() != null) {
                     holder.ivThumbImage.setImageBitmap(BitmapFactory.decodeByteArray(movie2.getPoster(), 0, movie2.getPoster().length));
+                } else {
+                    holder.ivThumbImage.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_movie));
                 }
                 holder.tvTitle.setText(movie2.getTitle());
                 holder.tvDirector.setText(movie2.getDirector());
@@ -323,5 +353,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
         }
     }
 
+    private boolean isNetworkAvailable() {
+        final ConnectivityManager connectivityManager = ((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE));
+        if(connectivityManager.getActiveNetworkInfo()!=null && connectivityManager.getActiveNetworkInfo().isConnected())
+            return true;
+        else
+            return false;
+    }
 
 }
