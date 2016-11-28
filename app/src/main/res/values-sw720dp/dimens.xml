@@ -6,4 +6,7 @@
     <dimen name="poster_height">400dp</dimen>
     <dimen name="details_padding">60dp</dimen>
 
+    <dimen name="movie_details_textsize_label">18sp</dimen>
+    <dimen name="movie_details_textsize">19sp</dimen>
+
 </resources>

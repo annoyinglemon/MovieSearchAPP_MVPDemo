@@ -16,19 +16,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/md_blue_grey_300"
             android:orientation="vertical"
             android:paddingEnd="@dimen/details_padding"
             android:paddingStart="@dimen/details_padding"
-            android:paddingTop="7dp"
-            android:background="@color/md_blue_grey_300">
+            android:paddingTop="7dp">
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="4dp"
                 app:cardElevation="3dp"
-                app:cardUseCompatPadding="true"
-                >
+                app:cardUseCompatPadding="true">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -56,159 +55,128 @@
                             android:orientation="horizontal"
                             android:weightSum="100">
 
-                            <TextView
+                            <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginEnd="8dp"
-                                android:layout_weight="27"
-                                android:text="Title:"
-                                android:textSize="18sp" />
+                                android:layout_marginStart="5dp"
+                                android:layout_marginEnd="5dp"
+                                android:layout_weight="45"
+                                android:gravity="start"
+                                android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/tvGenInfo_Title"
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Title:"
+                                    android:textSize="@dimen/movie_details_textsize_label" />
+
+                                <TextView
+                                    android:id="@+id/tvGenInfo_Title"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="5dp"
+                                    android:text="Deadpool"
+                                    android:textSize="@dimen/movie_details_textsize"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Year:"
+                                    android:textSize="@dimen/movie_details_textsize_label" />
+
+                                <TextView
+                                    android:id="@+id/tvGenInfo_Year"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="5dp"
+                                    android:text="2016"
+                                    android:textSize="@dimen/movie_details_textsize"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Rated:"
+                                    android:textSize="@dimen/movie_details_textsize_label" />
+
+                                <TextView
+                                    android:id="@+id/tvGenInfo_Rated"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="5dp"
+                                    android:text="R"
+                                    android:textSize="@dimen/movie_details_textsize"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Released:"
+                                    android:textSize="@dimen/movie_details_textsize_label" />
+
+                                <TextView
+                                    android:id="@+id/tvGenInfo_Released"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="5dp"
+                                    android:text="12 Feb 2016"
+                                    android:textSize="@dimen/movie_details_textsize"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Runtime:"
+                                    android:textSize="@dimen/movie_details_textsize_label" />
+
+                                <TextView
+                                    android:id="@+id/tvGenInfo_Runtime"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="5dp"
+                                    android:text="108 min"
+                                    android:textSize="@dimen/movie_details_textsize"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Language:"
+                                    android:textSize="@dimen/movie_details_textsize_label" />
+
+                                <TextView
+                                    android:id="@+id/tvGenInfo_Language"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="5dp"
+                                    android:text="English"
+                                    android:textSize="@dimen/movie_details_textsize"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Country:"
+                                    android:textSize="@dimen/movie_details_textsize_label" />
+
+                                <TextView
+                                    android:id="@+id/tvGenInfo_Country"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="USA"
+                                    android:textSize="@dimen/movie_details_textsize"
+                                    android:textStyle="bold"/>
+
+                            </LinearLayout>
+
+                            <ImageView
+                                android:id="@+id/ivMoviePoster2"
                                 android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="80"
-                                android:text="Deadpool"
-                                android:textSize="18sp" />
-                        </LinearLayout>
+                                android:layout_height="match_parent"
+                                android:layout_weight="55"
+                                android:paddingStart="5dp"/>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:weightSum="100">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="8dp"
-                                android:layout_weight="27"
-                                android:text="Year:"
-                                android:textSize="18sp" />
-
-                            <TextView
-                                android:id="@+id/tvGenInfo_Year"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="80"
-                                android:text="2016"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:weightSum="100">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="8dp"
-                                android:layout_weight="27"
-                                android:text="Rated:"
-                                android:textSize="18sp" />
-
-                            <TextView
-                                android:id="@+id/tvGenInfo_Rated"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="80"
-                                android:text="R"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:weightSum="100">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="8dp"
-                                android:layout_weight="27"
-                                android:text="Released:"
-                                android:textSize="18sp" />
-
-                            <TextView
-                                android:id="@+id/tvGenInfo_Released"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="80"
-                                android:text="12 Feb 2016"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:weightSum="100">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="8dp"
-                                android:layout_weight="27"
-                                android:text="Runtime:"
-                                android:textSize="18sp" />
-
-                            <TextView
-                                android:id="@+id/tvGenInfo_Runtime"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="80"
-                                android:text="108 min"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:weightSum="100">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="8dp"
-                                android:layout_weight="27"
-                                android:text="Language:"
-                                android:textSize="18sp" />
-
-                            <TextView
-                                android:id="@+id/tvGenInfo_Language"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="80"
-                                android:text="English"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:weightSum="100">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="8dp"
-                                android:layout_weight="27"
-                                android:text="Country:"
-                                android:textSize="18sp" />
-
-                            <TextView
-                                android:id="@+id/tvGenInfo_Country"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="80"
-                                android:text="USA"
-                                android:textSize="18sp" />
                         </LinearLayout>
                     </LinearLayout>
                 </RelativeLayout>
@@ -247,7 +215,7 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:text="Action, Adventure, Comedy"
-                            android:textSize="18sp" />
+                            android:textSize="15sp" />
                     </LinearLayout>
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
@@ -285,7 +253,7 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:text="Tim Miller"
-                            android:textSize="18sp" />
+                            android:textSize="15sp" />
                     </LinearLayout>
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
@@ -323,7 +291,7 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:text="Rhett Reese, Paul Wernick"
-                            android:textSize="18sp" />
+                            android:textSize="15sp" />
                     </LinearLayout>
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
@@ -361,7 +329,7 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:text="Ryan Reynolds, Karan Soni, Ed Skrein, Michael Benyaer"
-                            android:textSize="18sp" />
+                            android:textSize="15sp" />
                     </LinearLayout>
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
@@ -399,7 +367,7 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:text="This is the origin story of former Special Forces operative turned mercenary Wade Wilson, who after being subjected to a rogue experiment that leaves him with accelerated healing powers, adopts the alter ego Deadpool. Armed with his new abilities and a dark, twisted sense of humor, Deadpool hunts down the man who nearly destroyed his life."
-                            android:textSize="17sp" />
+                            android:textSize="15sp" />
                     </LinearLayout>
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
@@ -437,7 +405,7 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:text="4 wins and 11 nominations"
-                            android:textSize="17sp" />
+                            android:textSize="15sp" />
                     </LinearLayout>
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
@@ -466,54 +434,76 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tvRatings"
-                        android:orientation="vertical"
-                        android:layout_marginTop="5dp">
+                        android:layout_marginTop="5dp"
+                        android:orientation="vertical">
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:weightSum="100"
-                            android:paddingStart="30dp"
-                            android:paddingEnd="30dp">
+                            android:paddingEnd="30dp"
+                            android:paddingStart="30dp">
+
                             <ImageView
-                                android:layout_width="0dp"
+                                android:layout_width="50dp"
                                 android:layout_height="50dp"
-                                android:layout_weight="50"
-                                android:src="@drawable/ic_metascore"/>
+                                android:src="@drawable/ic_metascore" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:text="Metacritic"
+                                android:textColor="@color/colorPrimaryDark"
+                                android:textSize="@dimen/movie_details_textsize"
+                                android:textStyle="bold"
+                                android:layout_marginEnd="20dp"
+                                android:layout_marginStart="20dp"/>
+
                             <TextView
                                 android:id="@+id/tvMetascore"
-                                android:layout_width="0dp"
-                                android:layout_weight="50"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:text="75"
-                                android:textSize="40sp"
-                                android:textStyle="bold"
                                 android:gravity="center_vertical"
-                                android:textColor="@color/colorPrimaryDark"/>
+                                android:text="75"
+                                android:textColor="@color/colorPrimaryDark"
+                                android:textSize="40sp"
+                                android:textStyle="bold" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
                             android:orientation="horizontal"
-                            android:weightSum="100"
-                            android:paddingStart="30dp"
                             android:paddingEnd="30dp"
-                            android:layout_marginTop="5dp">
+                            android:paddingStart="30dp">
+
                             <ImageView
-                                android:layout_width="0dp"
+                                android:layout_width="50dp"
                                 android:layout_height="50dp"
-                                android:layout_weight="50"
-                                android:src="@drawable/ic_imdb"/>
+                                android:src="@drawable/ic_imdb" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:text="IMDb"
+                                android:textColor="@color/colorPrimaryDark"
+                                android:textSize="@dimen/movie_details_textsize"
+                                android:textStyle="bold"
+                                android:layout_marginEnd="20dp"
+                                android:layout_marginStart="20dp"/>
+
                             <TextView
                                 android:id="@+id/tvIMDb"
-                                android:layout_width="0dp"
-                                android:layout_weight="50"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:text="8.0"
-                                android:textSize="40sp"
-                                android:textStyle="bold"
                                 android:gravity="center_vertical"
-                                android:textColor="@color/colorPrimaryDark"/>
+                                android:text="8.0"
+                                android:textColor="@color/colorPrimaryDark"
+                                android:textSize="40sp"
+                                android:textStyle="bold" />
                         </LinearLayout>
                     </LinearLayout>
                 </RelativeLayout>
@@ -541,21 +531,21 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/poster_height"
-                android:gravity="center"
-                android:background="@color/md_blue_grey_900">
+                android:background="@color/md_blue_grey_900"
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/ivMoviePoster"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="50dp"
-                    android:layout_marginStart="50dp"
-                    android:scaleType="centerCrop"
-                    />
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="20dp"
+                    android:scaleType="centerCrop" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/dark_bottom"/>
+                    android:background="@drawable/dark_bottom" />
             </RelativeLayout>
 
             <android.support.v7.widget.Toolbar

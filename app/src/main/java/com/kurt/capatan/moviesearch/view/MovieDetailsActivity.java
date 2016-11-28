@@ -32,6 +32,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
 
         ImageView ivMoviePoster = (ImageView) findViewById(R.id.ivMoviePoster);
+        ImageView ivMoviePoster2 = (ImageView) findViewById(R.id.ivMoviePoster2);
+
         TextView tvGenInfo_Title = (TextView) findViewById(R.id.tvGenInfo_Title);
         TextView tvGenInfo_Year = (TextView) findViewById(R.id.tvGenInfo_Year);
         TextView tvGenInfo_Rated = (TextView) findViewById(R.id.tvGenInfo_Rated);
@@ -50,6 +52,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         if(mMovie.getPoster()!=null){
             ivMoviePoster.setImageBitmap(BitmapFactory.decodeByteArray(mMovie.getPoster(), 0, mMovie.getPoster().length));
+            ivMoviePoster2.setImageBitmap(BitmapFactory.decodeByteArray(mMovie.getPoster(), 0, mMovie.getPoster().length));
         }
         tvGenInfo_Title.setText(mMovie.getTitle());
         tvGenInfo_Year.setText(Integer.toString(mMovie.getYear()));
