@@ -18,7 +18,6 @@
 
 package com.kurt.capatan.moviesearch.model;
 
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
 import com.kurt.capatan.moviesearch.data.Movie;

@@ -21,12 +21,11 @@ package com.kurt.capatan.moviesearch.view;
 import com.kurt.capatan.moviesearch.data.Movie;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public interface MainActivityViewContract {
 
     void hideTextGuide();
-    //todo show "No movies found"
+
     void showNoMoviesFound();
 
     void hideNoMoviesFound();
