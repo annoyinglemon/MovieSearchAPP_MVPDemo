@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -65,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
                 etSearch.requestFocus();
             }
         });
-
 
         etSearch.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -139,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
             }
         });
     }
+
 
     @Override
     public void hideTextGuide() {

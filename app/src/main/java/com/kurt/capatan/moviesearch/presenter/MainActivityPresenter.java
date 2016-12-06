@@ -1,20 +1,3 @@
-/*
- *
- *  * Copyright (C) 2014 Antonio Leiva Gordillo.
- *  *
- *  * Licensed under the Apache License, Version 2.0 (the "License");
- *  * you may not use this file except in compliance with the License.
- *  * You may obtain a copy of the License at
- *  *
- *  *      http://www.apache.org/licenses/LICENSE-2.0
- *  *
- *  * Unless required by applicable law or agreed to in writing, software
- *  * distributed under the License is distributed on an "AS IS" BASIS,
- *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  * See the License for the specific language governing permissions and
- *  * limitations under the License.
- *
- */
 
 package com.kurt.capatan.moviesearch.presenter;
 
@@ -43,7 +26,7 @@ public class MainActivityPresenter implements MainActivityPresenterContract, Mov
     @Override
     public void onInitialSearch(String searchQuery, boolean isNetworkConnected) {
         if (isNetworkConnected) {
-            mSearchQuery = searchQuery;
+            this.setSearchQueryString(searchQuery);
             mainActivityViewContract.showProgress();
             mainActivityViewContract.hideMovieRecyclerView();
             mainActivityViewContract.hideNoMoviesFound();
@@ -51,8 +34,8 @@ public class MainActivityPresenter implements MainActivityPresenterContract, Mov
             mainActivityViewContract.hideProgressItemBottom();
             mainActivityViewContract.hideSoftKeyboard();
             mainActivityViewContract.recyclerViewScrollToTop();
-            movieRepositoryContract.newMovieSearch(mSearchQuery, this);
-            mPageNumber = 1;
+            movieRepositoryContract.newMovieSearch(this.getSearchQueryString(), this);
+            this.setPageCurrentPageNumber(1);
         } else {
             mainActivityViewContract.showNoNetworkSnackbar();
         }
@@ -61,12 +44,10 @@ public class MainActivityPresenter implements MainActivityPresenterContract, Mov
     @Override
     public void onNextPageSearch(int numberSearchMovies, boolean isSearching, boolean isNetworkConnected) {
         if (isNetworkConnected) {
-            mPageNumber = mPageNumber + 1;
             if ((numberSearchMovies % 10) == 0 && !isSearching) {
-                movieRepositoryContract.nextPageSearch(mSearchQuery, mPageNumber, this);
+                this.setPageCurrentPageNumber(getPageCurrentPageNumber() + 1);
+                movieRepositoryContract.nextPageSearch(mSearchQuery, this.getPageCurrentPageNumber(), this);
                 mainActivityViewContract.showProgressItemBottom();
-            } else {
-                mainActivityViewContract.hideProgressItemBottom();
             }
         } else {
             mainActivityViewContract.showNoNetworkSnackbar();
@@ -80,9 +61,7 @@ public class MainActivityPresenter implements MainActivityPresenterContract, Mov
         if (movies != null && movies.size() > 0) {
             mainActivityViewContract.addMovieItems(movies);
             mainActivityViewContract.showMovieRecyclerView();
-            for (Movie movie : movies) {
-                downloadPoster(movie);
-            }
+            this.downloadPoster(movies);
         } else {
             mainActivityViewContract.showNoMoviesFound();
         }
@@ -93,17 +72,17 @@ public class MainActivityPresenter implements MainActivityPresenterContract, Mov
         mainActivityViewContract.hideProgressItemBottom();
         if (movies != null && movies.size() > 0) {
             mainActivityViewContract.addMovieItems(movies);
-            for (Movie movie : movies) {
-                downloadPoster(movie);
-            }
+            this.downloadPoster(movies);
         } else {
             mainActivityViewContract.showToastMessage("No movies to follow");
         }
     }
 
     @Override
-    public void downloadPoster(Movie movie) {
-        movieRepositoryContract.downloadPoster(movie, this);
+    public void downloadPoster(ArrayList<Movie> movies) {
+        for (Movie movie : movies) {
+            movieRepositoryContract.downloadPoster(movie, this);
+        }
     }
 
     @Override
@@ -134,4 +113,27 @@ public class MainActivityPresenter implements MainActivityPresenterContract, Mov
     public void onSaveInstanceState(Bundle outState) {
 
     }
+
+    @Override
+    public void setSearchQueryString(String searchQueryString){
+        this.mSearchQuery = searchQueryString;
+    }
+
+    @Override
+    public String getSearchQueryString(){
+        return this.mSearchQuery;
+    }
+
+
+    @Override
+    public int getPageCurrentPageNumber() {
+        return this.mPageNumber;
+    }
+
+    @Override
+    public void setPageCurrentPageNumber(int pageNumber){
+        this.mPageNumber = pageNumber;
+    }
+
+
 }
