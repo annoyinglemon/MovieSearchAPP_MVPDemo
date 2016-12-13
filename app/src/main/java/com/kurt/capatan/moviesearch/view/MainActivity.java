@@ -1,5 +1,6 @@
 package com.kurt.capatan.moviesearch.view;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -9,7 +10,9 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -238,6 +241,15 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
     }
 
     @Override
+    @TargetApi(21)
+    public void showMovieDetails(Movie movie, ImageView moviePosterImg) {
+        Intent movieDetailIntent = new Intent(this, MovieDetailsActivity.class);
+        movieDetailIntent.putExtra("movie", movie);
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this, moviePosterImg, moviePosterImg.getTransitionName()).toBundle();
+        startActivity(movieDetailIntent, bundle);
+    }
+
+    @Override
     public void showMovieDetails(Movie movie) {
         Intent movieDetailIntent = new Intent(this, MovieDetailsActivity.class);
         movieDetailIntent.putExtra("movie", movie);
@@ -309,7 +321,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
         }
 
         @Override
-        public void onBindViewHolder(MyViewHolder holder, final int position) {
+        public void onBindViewHolder(final MyViewHolder holder, final int position) {
             if (position == 0) {
                 holder.cvMovieItem.setVisibility(View.GONE);
             } else if (position == (getItemCount() - 1)) {
@@ -328,7 +340,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
                     holder.cvMovieItem.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            showMovieDetails(movie);
+                            int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+                            if (currentapiVersion >= android.os.Build.VERSION_CODES.LOLLIPOP){
+                                // Do something for lollipop and above versions
+                                showMovieDetails(movie, holder.ivThumbImage);
+                            } else{
+                                // do something for phones running an SDK before lollipop
+                                showMovieDetails(movie);
+                            }
                         }
                     });
                     holder.pbSearchingBottom.setVisibility(View.GONE);
@@ -347,7 +366,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
                 holder.cvMovieItem.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showMovieDetails(movie2);
+                        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+                        if (currentapiVersion >= android.os.Build.VERSION_CODES.LOLLIPOP){
+                            // Do something for lollipop and above versions
+                            showMovieDetails(movie2, holder.ivThumbImage);
+                        } else{
+                            // do something for phones running an SDK before lollipop
+                            showMovieDetails(movie2);
+                        }
                     }
                 });
                 holder.pbSearchingBottom.setVisibility(View.GONE);

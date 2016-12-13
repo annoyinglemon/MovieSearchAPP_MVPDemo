@@ -1,6 +1,8 @@
 
 package com.kurt.capatan.moviesearch.view;
 
+import android.widget.ImageView;
+
 import com.kurt.capatan.moviesearch.data.Movie;
 
 import java.util.ArrayList;
@@ -30,6 +32,8 @@ public interface MainActivityViewContract {
     void addPosterToMovieItem(Movie movie);
 
     void showMovieDetails(Movie movie);
+
+    void showMovieDetails(Movie movie, ImageView moviePosterImg);
 
     void showToastMessage(String message);
 
