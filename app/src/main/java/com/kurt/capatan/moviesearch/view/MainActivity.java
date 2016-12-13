@@ -242,9 +242,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
 
     @Override
     @TargetApi(21)
-    public void showMovieDetails(Movie movie, ImageView moviePosterImg) {
+    public void showMovieDetails(Movie movie, ImageView moviePosterImg, boolean applyCurve) {
         Intent movieDetailIntent = new Intent(this, MovieDetailsActivity.class);
         movieDetailIntent.putExtra("movie", movie);
+        movieDetailIntent.putExtra(MovieDetailsActivity.EXTRA_CURVE, applyCurve);
         Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this, moviePosterImg, moviePosterImg.getTransitionName()).toBundle();
         startActivity(movieDetailIntent, bundle);
     }
@@ -343,7 +344,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
                             int currentapiVersion = android.os.Build.VERSION.SDK_INT;
                             if (currentapiVersion >= android.os.Build.VERSION_CODES.LOLLIPOP){
                                 // Do something for lollipop and above versions
-                                showMovieDetails(movie, holder.ivThumbImage);
+                                boolean curve = (position % 2 == 0);
+                                showMovieDetails(movie, holder.ivThumbImage, curve);
                             } else{
                                 // do something for phones running an SDK before lollipop
                                 showMovieDetails(movie);
@@ -369,7 +371,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewC
                         int currentapiVersion = android.os.Build.VERSION.SDK_INT;
                         if (currentapiVersion >= android.os.Build.VERSION_CODES.LOLLIPOP){
                             // Do something for lollipop and above versions
-                            showMovieDetails(movie2, holder.ivThumbImage);
+                            boolean curve = (position % 2 == 0);
+                            showMovieDetails(movie2, holder.ivThumbImage, curve);
                         } else{
                             // do something for phones running an SDK before lollipop
                             showMovieDetails(movie2);

@@ -33,7 +33,7 @@ public interface MainActivityViewContract {
 
     void showMovieDetails(Movie movie);
 
-    void showMovieDetails(Movie movie, ImageView moviePosterImg);
+    void showMovieDetails(Movie movie, ImageView moviePosterImg, boolean applyCurve);
 
     void showToastMessage(String message);
 

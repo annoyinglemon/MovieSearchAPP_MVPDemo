@@ -1,11 +1,14 @@
 package com.kurt.capatan.moviesearch.view;
 
+import android.annotation.TargetApi;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.TransitionInflater;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,6 +16,8 @@ import com.kurt.capatan.moviesearch.R;
 import com.kurt.capatan.moviesearch.data.Movie;
 
 public class MovieDetailsActivity extends AppCompatActivity {
+
+    public static final String EXTRA_CURVE = "extra_curve";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,5 +75,26 @@ public class MovieDetailsActivity extends AppCompatActivity {
         tvMetascore.setText(Integer.toString(mMovie.getMetascore()));
         tvIMDb.setText(Double.toString(mMovie.getImdb()));
 
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP){
+            applyCurve();
+        }
+
+    }
+
+    @TargetApi(21)
+    void applyCurve(){
+        boolean curve = getIntent().getBooleanExtra(EXTRA_CURVE, false);
+        getWindow().setSharedElementEnterTransition(TransitionInflater.from(this)
+                .inflateTransition(curve ? R.transition.curve : R.transition.move));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
